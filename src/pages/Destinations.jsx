@@ -1,17 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { Card, Form, Row, Col } from "react-bootstrap";
+import { Form, Row, Col } from "react-bootstrap";
 import DestinationCard from "../components/DestinationCard";
 
-const cities = [
-  { name: "Paris", country: "France", image: "https://plus.unsplash.com/premium_photo-1661919210043-fd847a58522d?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1471" },
-  { name: "Tokyo", country: "Japan", image: "https://plus.unsplash.com/premium_photo-1661914240950-b0124f20a5c1?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470" },
-  { name: "New York", country: "USA", image: "https://plus.unsplash.com/premium_photo-1714051660720-888e8454a021?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470" },
-  // { name: "TODO", country: "GET", image: "cities-from-backend.jpg" },
-];
+import { db } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 export default function Destinations() {
+  const [cities, setCities] = useState([]);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "cities"));
+        const citiesData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setCities(citiesData);
+      } catch (error) {
+        console.error("Hiba a városok lekérdezése közben: ", error);
+      }
+    };
+
+    fetchCities();
+  }, []);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -38,8 +50,8 @@ export default function Destinations() {
         value={searchTerm}
       />
       <Row>
-        {filteredCities.map((city, idx) => (
-          <Col md={4} key={idx}>
+        {filteredCities.map((city) => (
+          <Col md={4} key={city.id}>
             <DestinationCard city={city} />
           </Col>
         ))}
