@@ -1,10 +1,11 @@
 import { Component } from "react";
+import LoginForm from "../components/LoginForm.jsx";
+
 export default class Login extends Component {
     render() {
         return (
             <>
-                <p>TODO - implement Login component</p>
-                {/* TODO - apply LoginForm */}
+                <LoginForm onLogin={this.props.onLogin} />
             </>
         )
     }
