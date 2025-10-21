@@ -1,17 +1,44 @@
-import React, { useState } from "react";
-import { Card, Form, Row, Col } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Form, Row, Col } from "react-bootstrap";
+import DestinationCard from "../components/DestinationCard";
 
-const cities = [
-  { name: "Paris", country: "France", image: "TODO-add-static-img-url-paris.jpg" },
-  { name: "Tokyo", country: "Japan", image: "TODO-add-static-img-url-tokyo.jpg" },
-  { name: "New York", country: "USA", image: "TODO-add-static-img-url-newyork.jpg" },
-  { name: "TODO", country: "GET", image: "cities-from-backend.jpg" },
-];
+import { db } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 export default function Destinations() {
-  const [filter, setFilter] = useState("");
+  const [cities, setCities] = useState([]);
 
-  const filteredCities = cities // TODO filter cities if include filter value
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "cities"));
+        const citiesData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setCities(citiesData);
+      } catch (error) {
+        console.error("Hiba a városok lekérdezése közben: ", error);
+      }
+    };
+
+    fetchCities();
+  }, []);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
+
+  const filteredCities = cities.filter(city =>
+    city.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+    city.country.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+  );
 
   return (
     <div className="container">
@@ -19,19 +46,13 @@ export default function Destinations() {
         type="text"
         placeholder="Filter by city or country..."
         className="mb-3"
-        onChange={(e) => setFilter(e.target.value)}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        value={searchTerm}
       />
       <Row>
-        {filteredCities.map((city, idx) => (
-          <Col md={4} key={idx}>
-            {/* TODO - apply DestinationCard */}
-            <Card className="mb-3 shadow-sm">
-              <Card.Img variant="top" src={city.image} />
-              <Card.Body>
-                <Card.Title>{city.name}</Card.Title>
-                <Card.Text>{city.country}</Card.Text>
-              </Card.Body>
-            </Card>
+        {filteredCities.map((city) => (
+          <Col md={4} key={city.id}>
+            <DestinationCard city={city} />
           </Col>
         ))}
       </Row>

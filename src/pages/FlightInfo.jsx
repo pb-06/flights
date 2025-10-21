@@ -1,35 +1,30 @@
-import { Table } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import FlightTable from "../components/FlightTable";
 
-const flights = [
-  { from: "Paris", to: "Tokyo", flight: "AF274", depart: "10:30", arrive: "04:45", price: "€850" },
-  { from: "New York", to: "Rome", flight: "DL198", depart: "13:00", arrive: "02:15", price: "$750" },
-  { from: "TODO", to: "GET", flight: "fromBackend", depart: "12:34", arrive: "21:09", price: "$1" },
-];
+import { db } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 export default function FlightInfo() {
+  const [flights, setFlights] = useState([]);
+
+  useEffect(() => {
+    const fetchFlights = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "flights"));
+        const flightsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setFlights(flightsData);
+      } catch (error) {
+        console.error("Hiba a járatok lekérdezése közben: ", error);
+      }
+    };
+
+    fetchFlights();
+  }, []);
+
   return (
     <div className="container">
       <h3>Available Flights</h3>
-      {/* TODO - apply FlightTable */}
-      <Table striped bordered hover responsive>
-        <thead>
-          <tr>
-            <th>From</th><th>To</th><th>Flight</th><th>Departure</th><th>Arrival</th><th>Price</th>
-          </tr>
-        </thead>
-        <tbody>
-          {flights.map((f, i) => (
-            <tr key={i}>
-              <td>{f.from}</td>
-              <td>{f.to}</td>
-              <td>{f.flight}</td>
-              <td>{f.depart}</td>
-              <td>{f.arrive}</td>
-              <td>{f.price}</td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      <FlightTable flights={flights} />
     </div>
   );
 }
