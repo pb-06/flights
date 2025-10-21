@@ -1,4 +1,5 @@
 import { Table } from "react-bootstrap";
+import FlightTable from "../components/FlightTable";
 
 const flights = [
   { from: "Paris", to: "Tokyo", flight: "AF274", depart: "10:30", arrive: "04:45", price: "€850" },
