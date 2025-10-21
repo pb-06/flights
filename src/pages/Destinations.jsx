@@ -24,14 +24,7 @@ export default function Destinations() {
       <Row>
         {filteredCities.map((city, idx) => (
           <Col md={4} key={idx}>
-            {/* TODO - apply DestinationCard */}
-            <Card className="mb-3 shadow-sm">
-              <Card.Img variant="top" src={city.image} />
-              <Card.Body>
-                <Card.Title>{city.name}</Card.Title>
-                <Card.Text>{city.country}</Card.Text>
-              </Card.Body>
-            </Card>
+            <DestinationCard city={city} />
           </Col>
         ))}
       </Row>
