@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Card, Form, Row, Col } from "react-bootstrap";
+import DestinationCard from "../components/DestinationCard";
 
 const cities = [
   { name: "Paris", country: "France", image: "TODO-add-static-img-url-paris.jpg" },
