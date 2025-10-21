@@ -3,10 +3,10 @@ import { Card, Form, Row, Col } from "react-bootstrap";
 import DestinationCard from "../components/DestinationCard";
 
 const cities = [
-  { name: "Paris", country: "France", image: "TODO-add-static-img-url-paris.jpg" },
-  { name: "Tokyo", country: "Japan", image: "TODO-add-static-img-url-tokyo.jpg" },
-  { name: "New York", country: "USA", image: "TODO-add-static-img-url-newyork.jpg" },
-  { name: "TODO", country: "GET", image: "cities-from-backend.jpg" },
+  { name: "Paris", country: "France", image: "https://plus.unsplash.com/premium_photo-1661919210043-fd847a58522d?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1471" },
+  { name: "Tokyo", country: "Japan", image: "https://plus.unsplash.com/premium_photo-1661914240950-b0124f20a5c1?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470" },
+  { name: "New York", country: "USA", image: "https://plus.unsplash.com/premium_photo-1714051660720-888e8454a021?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470" },
+  // { name: "TODO", country: "GET", image: "cities-from-backend.jpg" },
 ];
 
 export default function Destinations() {
