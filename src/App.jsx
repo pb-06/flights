@@ -1,35 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+/* TODO react-app> npm i express cors react-router-dom bootstrap react-bootstrap */
 
-function App() {
-  const [count, setCount] = useState(0)
+/** TODO - dev team collaboration powered by Git */
+/** branch deployment promote chain: prod=main <- uat <- dev/flights <- dev/flights-firstname-lastname */
+
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login";
+import Destinations from "./pages/Destinations";
+import FlightInfo from "./pages/FlightInfo";
+import Tickets from "./pages/Tickets";
+import NavbarMenu from "./components/NavbarMenu";
+
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
+import './App.css';
+
+export default function App() {
+  const [loggedIn, setLoggedIn] = useState(true); // TODO - start with false and implement Login
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Router>
+      {loggedIn && <NavbarMenu onLogout={() => setLoggedIn(false)} />}
+      <Routes>
+        <Route path="/" element=
+          {loggedIn ? <Navigate to="/destinations" /> : <Login onLogin={() => setLoggedIn(true)} />} />
 
-export default App
+        <Route path="/destinations" element={<Destinations />} />
+        <Route path="/flight-info" element={<FlightInfo />} />
+        <Route path="/tickets" element={<Tickets />} />
+      </Routes>
+    </Router>
+  );
+}

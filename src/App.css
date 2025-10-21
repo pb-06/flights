@@ -40,3 +40,10 @@
 .read-the-docs {
   color: #888;
 }
+
+
+
+
+body {
+  padding-top: 1px; /* TODO - Adjust based on navbar height */
+}
