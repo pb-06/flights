@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Form, Row, Col } from "react-bootstrap";
 import DestinationCard from "../components/DestinationCard";
 
@@ -10,9 +10,23 @@ const cities = [
 ];
 
 export default function Destinations() {
-  const [filter, setFilter] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
-  const filteredCities = cities // TODO filter cities if include filter value
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
+
+  const filteredCities = cities.filter(city =>
+    city.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+    city.country.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+  );
 
   return (
     <div className="container">
@@ -20,7 +34,8 @@ export default function Destinations() {
         type="text"
         placeholder="Filter by city or country..."
         className="mb-3"
-        onChange={(e) => setFilter(e.target.value)}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        value={searchTerm}
       />
       <Row>
         {filteredCities.map((city, idx) => (
